@@ -22,7 +22,7 @@ download_file(
 )
 
 download_file(
-    "https://huggingface.co/novateur/WavTokenizer-large-speech-75token/resolve/main/wavtokenizer_large_speech_320_24k.ckpt",
+    "https://huggingface.co/novateur/WavTokenizer-large-speech-75token/blob/main/wavtokenizer_large_speech_320_v2.ckpt",
     "wavtokenizer_model.ckpt"
 )
 
