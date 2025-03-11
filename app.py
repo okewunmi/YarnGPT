@@ -24,6 +24,7 @@ WAV_TOKENIZER_MODEL_PATH = os.path.join(os.getcwd(), "wavtokenizer_model.ckpt")
 audio_tokenizer = None
 model = None
 
+
 def download_model_files():
     """Download necessary model files if they don't exist."""
     logger.info("Checking for model files...")
@@ -38,13 +39,33 @@ def download_model_files():
     
     if not os.path.exists(WAV_TOKENIZER_MODEL_PATH):
         logger.info(f"Downloading model file to {WAV_TOKENIZER_MODEL_PATH}")
-        download_file(
-            "https://huggingface.co/novateur/WavTokenizer-large-speech-75token/resolve/main/wavtokenizer_large_speech_320_24k.ckpt",
-            WAV_TOKENIZER_MODEL_PATH
-        )
+        try:
+            # First try the original URL
+            download_file(
+                "https://huggingface.co/novateur/WavTokenizer-large-speech-75token/resolve/main/wavtokenizer_large_speech_320_24k.ckpt",
+                WAV_TOKENIZER_MODEL_PATH
+            )
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 404:
+                logger.warning("Original model file not found, trying alternative location")
+                # Try alternative models - you may need to adjust these based on what's available
+                try:
+                    # Try medium model instead
+                    download_file(
+                        "https://huggingface.co/novateur/WavTokenizer-medium-speech-75token/resolve/main/wavtokenizer_medium_speech_320_24k.ckpt",
+                        WAV_TOKENIZER_MODEL_PATH
+                    )
+                except requests.exceptions.HTTPError:
+                    # If medium also fails, try base model
+                    logger.warning("Medium model not found, trying base model")
+                    download_file(
+                        "https://huggingface.co/novateur/WavTokenizer-base-speech-75token/resolve/main/wavtokenizer_base_speech_320_24k.ckpt",
+                        WAV_TOKENIZER_MODEL_PATH
+                    )
+            else:
+                raise
     
     logger.info("Model files ready")
-
 def download_file(url, destination):
     """Download a file from URL to destination path."""
     logger.info(f"Downloading {url}")
