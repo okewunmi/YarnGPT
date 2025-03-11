@@ -5,4 +5,5 @@ torchaudio==2.1.0
 numpy==1.24.3
 transformers==4.34.0
 outetts==0.2.3
-uroman==1.0.1
+uroman>=1.0.0
+requests==2.31.0
